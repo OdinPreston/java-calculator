@@ -1,5 +1,6 @@
 import java.lang.ArrayIndexOutOfBoundsException;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,30 +9,9 @@ enum Tokens {
     DIVISION, MODULO, DOUBLE
 }
 
-class Tuple<L,R> {
-    private L left;
-    private R right;
-    public Tuple(L left, R right) {
-	this.left = left;
-	this.right = right;
-    }
-    public L getFirst() {
-	return left;
-    }
-    public R getSecond() {
-	return right;
-    }
-    public void setFirst(L left) {
-	this.left = left;
-    }
-    public void setSecond(R right) {
-	this.right = right;
-    }
-}
+abstract class Notation {
 
-class Solver {
-
-    private boolean isOperator(char c) {
+    public static boolean isOperator(char c) {
 	switch(c) {
 	case '*':
 	case '/':
@@ -42,7 +22,7 @@ class Solver {
 	return false;
     }
 
-    private boolean isNumber(char c) {
+    public static boolean isNumber(char c) {
 	switch(c) {
 	case '0':
 	case '1':
@@ -59,7 +39,43 @@ class Solver {
 	return false;
     }
 
-    public boolean isValid(String string) {
+    public static int precedingNonWhitespace(int start, char s[]) {
+	// end is index of non-ws character
+	// returns -1 if not found
+	while(start > -1 && s[start] == ' ')
+	    --start;
+	return start;
+    }
+
+    public static int followingNonWhitespace(int end, char s[]) {
+	// start is index of non-ws character
+	// returns -1 if not found
+	while(end < s.length && s[end] == ' ')
+	    ++end;
+	return (end >= s.length) ? -1 : end;	
+    }
+
+    public static Notation getType(String string) {
+	char expr[] = string.toCharArray();
+	if(isOperator(expr[expr.length-1])) {
+	    System.out.println(string + ": Postfix Notation");
+	    return new PostfixNotation();
+	} else if(isOperator(expr[0])) {
+	    System.out.println(string + ": Prefix Notation");
+	    return new PrefixNotation();
+	}
+	System.out.println(string + ": Infix Notation");
+	return new InfixNotation();
+    }
+
+    abstract boolean isValid(String expr);
+    abstract double solve(String expr);
+
+}
+
+class InfixNotation extends Notation {
+    @Override
+    boolean isValid(String string) {
 	// remove whitespace, since it's insignificant
 	string = string.replaceAll("\\s+","");
 	System.out.println("string: " + string);
@@ -117,9 +133,6 @@ class Solver {
 			break tobreak;
 		    }
 		} catch(ArrayIndexOutOfBoundsException e) {
-		    System.out.println("number out of bounds (length " + expr.length + ")");
-		    result = false;
-		    break tobreak;
 		}
 		if(i != expr.length-1)
 		    --i; // to offset the loop increment
@@ -159,6 +172,238 @@ class Solver {
 	    }
 	}
 	return result;
+    }
+    @Override
+    double solve(String string) {
+	return 2;
+    }
+}
+
+class PostfixNotation extends Notation {
+    @Override
+    boolean isValid(String string) {
+	//	string = string.replaceAll("\\s+","");
+	char expr[] = string.toCharArray();
+	boolean result = true;
+	int i;
+	int operatorcounter = 0;
+	int operandcounter = 0;
+	tobreak:
+	for(i = 0; i < expr.length; ++i) {
+	    switch(expr[i]) {
+	    case '+':
+	    case '-':
+	    case '*':
+	    case '/':
+		try {
+		    int temp;
+		    int start = ((temp = precedingNonWhitespace(i, expr)) == -1) ? i-1 : temp;
+		    int end = ((temp = followingNonWhitespace(i, expr)) == -1) ? i+1 : temp;
+		    if( (!isNumber(expr[start]) && !isOperator(expr[start])) ||
+			(i != expr.length-1 && !isNumber(expr[end]) && !isOperator(expr[end])) ) {
+			System.out.println("operator " + expr[i] + " at index " + i + " check failed");
+			result = false;
+			break tobreak;
+		    } 			
+		} catch (ArrayIndexOutOfBoundsException e) {
+		    System.out.println("operator " + expr[i] + " at index " + i + " out of bounds");
+		    result = false;
+		    break tobreak;
+		}
+		++operatorcounter;
+		break;
+	    case '0':
+	    case '1':
+ 	    case '2':
+	    case '3':
+	    case '4':
+	    case '5':
+	    case '6':
+	    case '7':
+	    case '8':
+	    case '9':
+		try {
+		    int temp;
+		    int start = ((temp = precedingNonWhitespace(i, expr)) == -1) ? i-1 : temp;
+		    //		    int start = (i-1 < 0) ? 0 : i-1;
+		    while(isNumber(expr[i]) && i+1 < expr.length)
+			++i;
+		    if(expr[i] == '.') {
+			++i;
+			while(isNumber(expr[i]) && i+1 < expr.length)
+			    ++i;
+		    }
+		    //		    int end = i;
+		    int end = ((temp = followingNonWhitespace(i, expr)) == -1) ? i+1 : temp;
+		    if ( (end != 0 && !isNumber(expr[start]) && !isOperator(expr[start])) ||
+			 (!isNumber(expr[end]) && !isOperator(expr[end]))) {
+			System.out.println("number check failed at index " + start + " to " + end);
+			result = false;
+			break tobreak;
+		    }
+		} catch(ArrayIndexOutOfBoundsException e) {
+		    System.out.println("number out of bounds (length " + expr.length + ")");
+		    result = false;
+		    break tobreak;
+		}
+		if(i != expr.length-1)
+		    --i; // i points to next character, offset loop increment
+		++operandcounter;
+		break;
+	    case ' ':
+		break;
+	    default:
+		System.out.println("unrecognized character " + expr[i]);
+		result = false;
+		break tobreak;
+	    }
+	}
+	// * 5 5 or * * 5 5 5 ; we always have +1 operand to operator
+	return (operandcounter != operatorcounter+1) ? false : result;
+    }
+    @Override
+    double solve(String expr) {
+	return 2;
+    }
+}
+
+class PrefixNotation extends Notation {
+    @Override
+    boolean isValid(String string) {
+	char expr[] = string.toCharArray();
+	boolean result = true;
+	int i;
+	int operatorcounter = 0;
+	int operandcounter = 0;
+	tobreak:
+	for(i = 0; i < expr.length; ++i) {
+	    switch(expr[i]) {
+	    case '+':
+	    case '-':
+	    case '*':
+	    case '/':
+		try {
+		    int temp;
+		    int start = ((temp = precedingNonWhitespace(i, expr)) == -1) ? i-1 : temp;
+		    int end = ((temp = followingNonWhitespace(i, expr)) == -1) ? i+1 : temp;
+		    if ( (i != 0 && !isNumber(expr[start]) && !isOperator(expr[start])) ||
+			 (!isNumber(expr[end]) && !isOperator(expr[end]))) {
+			System.out.println("operator " + expr[i] + " at index " + i + " check failed");
+			result = false;
+			break tobreak;
+		    }
+		} catch(ArrayIndexOutOfBoundsException e) {
+		    System.out.println("operator " + expr[i] + " at index " + i + " out of bounds");
+		    result = false;
+		    break tobreak;
+		}
+		++operatorcounter;
+		break;
+	    case '0':
+	    case '1':
+	    case '2':
+	    case '3':
+	    case '4':
+	    case '5':
+	    case '6':
+	    case '7':
+	    case '8':
+	    case '9':
+		try {
+		    int temp;
+		    int start = ((temp = precedingNonWhitespace(i, expr)) == -1) ? i-1 : temp;
+		    while(isNumber(expr[i]) && i+1 < expr.length)
+			++i;
+		    if(expr[i] == '.') {
+			++i;
+			while(isNumber(expr[i]) && i+1 < expr.length)
+			    ++i;
+		    }
+		    int end = ((temp = followingNonWhitespace(i, expr)) == -1) ? i+1 : temp;
+		    if( (!isNumber(expr[start]) && !isOperator(expr[start])) ||
+			(end != expr.length-1 && !isNumber(expr[end]) && !isOperator(expr[end]))) {
+			System.out.println("number check failed at index " + start + " to " + end);
+			result = false;
+			break tobreak;
+		    }
+		} catch(ArrayIndexOutOfBoundsException e) {
+		    System.out.println("number out of bounds (length " + expr.length + ")");
+		    result = false;
+		    break tobreak;
+		}
+		if(i != expr.length-1)
+		    --i;
+		++operandcounter;
+		break;
+	    case ' ':
+		break;
+	    default:
+		System.out.println("unknown character: " + expr[i]);
+		result = false;
+		break tobreak;
+	    }
+	}
+	return (operandcounter != operatorcounter+1) ? false : result;
+    }
+    @Override
+    double solve(String expr) {
+	return 2;
+    }
+}
+
+class Tuple<L,R> {
+    private L left;
+    private R right;
+    public Tuple(L left, R right) {
+	this.left = left;
+	this.right = right;
+    }
+    public L getFirst() {
+	return left;
+    }
+    public R getSecond() {
+	return right;
+    }
+    public void setFirst(L left) {
+	this.left = left;
+    }
+    public void setSecond(R right) {
+	this.right = right;
+    }
+}
+
+class Solver {
+
+    private boolean isOperator(char c) {
+	switch(c) {
+	case '*':
+	case '/':
+	case '+':
+	case '-':
+	    return true;
+	}
+	return false;
+    }
+
+    private boolean isNumber(char c) {
+	switch(c) {
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+	    return true;
+	}
+	return false;
+    }
+
+    public boolean isValid(String string) {
+	return false;
     }
     
     public ArrayList<Tuple<Tokens, String>> tokenizer(String... arguments) {
@@ -264,8 +509,13 @@ class Solver {
 
 public class JavaCalculator {
     public static void main(String args[]) {
-	Solver solver = new Solver();
-	System.out.println(solver.isValid(args[0]));
+	//	Solver solver = new Solver();
+	//	System.out.println(solver.isValid(args[0]));
+	int i;
+	for(i = 0; i < args.length; ++i) {
+	    Notation n = Notation.getType(args[i]);
+	    System.out.println(n.isValid(args[i]));
+	}
 	//	ArrayList<Tuple<Tokens, String>> lexeme = new ArrayList<Tuple<Tokens, String>>();
 	//	lexeme = solver.tokenizer("(102.3*20) this is 20**30 */ a word 2 / 5+( 20 % 5 * 50");
 	//	lexeme = solver.tokenizer(args);
