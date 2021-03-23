@@ -1,13 +1,14 @@
 import java.util.ArrayDeque;
+import java.math.BigDecimal;
 import java.lang.Math;
 
 class PostfixNotation extends Notation {
     @Override
-    Tuple<ArrayDeque<Character>, ArrayDeque<Double>> tokenize(String string)
+    Tuple<ArrayDeque<Character>, ArrayDeque<BigDecimal>> tokenize(String string)
     throws WrongExpressionException {
 	ArrayDeque<Character> operators = new ArrayDeque<Character>();
-	ArrayDeque<Double> operands = new ArrayDeque<Double>();
-	Tuple<ArrayDeque<Character>,ArrayDeque<Double>> result = new Tuple<ArrayDeque<Character>,ArrayDeque<Double>>(operators,operands);
+	ArrayDeque<BigDecimal> operands = new ArrayDeque<BigDecimal>();
+	Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>> result = new Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>>(operators,operands);
 	char expr[] = string.toCharArray();
 	int i;
 	for(i = 0; i < expr.length; ++i) {
@@ -33,11 +34,11 @@ class PostfixNotation extends Notation {
 		while(isNumber(expr[i]) && i+1 < expr.length)
 		    valueString += expr[i++];
 		if(expr[i] == '.') {
-		    valueString += expr[++i];
+		    valueString += expr[i++];
 		    while(isNumber(expr[i]) && i+1 < expr.length)
 			valueString += expr[i++];
 		}
-		double value = Double.parseDouble(valueString);
+		BigDecimal value = new BigDecimal(valueString);
 		operands.addFirst(value);
 		if(i != expr.length-1)
 		    --i;
@@ -51,31 +52,30 @@ class PostfixNotation extends Notation {
 	return result;
     }
     @Override
-    double evaluate(Tuple<ArrayDeque<Character>,ArrayDeque<Double>> tokens)
+    BigDecimal evaluate(Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>> tokens)
     throws WrongExpressionException {
 	ArrayDeque<Character> operators = tokens.getFirst();
-	ArrayDeque<Double> operands = tokens.getSecond();
+	ArrayDeque<BigDecimal> operands = tokens.getSecond();
 	char op;
-	double val;
-	double result = 0;
+	BigDecimal val;
 	while(!operators.isEmpty() && operands.size() >= 2) {
 	    op = operators.removeFirst();
 	    val = operands.removeFirst();
 	    switch(op) {
 	    case '^':
-		operands.addFirst(Math.pow(operands.removeFirst(), val));
+		operands.addFirst(new BigDecimal(Math.pow(operands.removeFirst().doubleValue(), val.doubleValue())));
 		break;
 	    case '*':
-		operands.addFirst(operands.removeFirst() * val);
+		operands.addFirst(operands.removeFirst().multiply(val));
 		break;
 	    case '/':
-		operands.addFirst(operands.removeFirst() / val);
+		operands.addFirst(operands.removeFirst().divide(val));
 		break;
 	    case '+':
-		operands.addFirst(operands.removeFirst() + val);
+		operands.addFirst(operands.removeFirst().add(val));
 		break;
 	    case '-':
-		operands.addFirst(operands.removeFirst() - val);
+		operands.addFirst(operands.removeFirst().subtract(val));
 		break;
 	    }
 	}
