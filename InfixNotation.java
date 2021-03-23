@@ -1,4 +1,5 @@
 import java.util.ArrayDeque;
+import java.math.BigDecimal;
 import java.lang.Math;
 
 class InfixNotation extends Notation {
@@ -19,29 +20,33 @@ class InfixNotation extends Notation {
 	return -1;
     }
 
-    private static double operation(char op, double val1, double val2)
+    private static BigDecimal operation(char op, BigDecimal val1, BigDecimal val2)
     throws WrongExpressionException {
 	switch(op) {
 	case '^':
-	    return Math.pow(val2, val1);
+	    System.out.println("val2 big: "+val2);
+	    System.out.println("val2: " + val2.doubleValue());
+	    System.out.println("val1: " + val1.doubleValue());
+	    System.out.println("VALUE: " + Math.pow(val2.doubleValue(), val1.doubleValue()));
+	    return new BigDecimal(Math.pow(val2.doubleValue(), val1.doubleValue()));
 	case '*':
-	    return val2 * val1;
+	    return val2.multiply(val1);
 	case '/':
-	    return val2 / val1;
+	    return val2.divide(val1);
 	case '+':
-	    return val2 + val1;
+	    return val2.add(val1);
 	case '-':
-	    return val2 - val1;
+	    return val2.subtract(val1);
 	}
 	throw new WrongExpressionException("Wrong operand: " + op);
     }
     
     @Override
-    Tuple<ArrayDeque<Character>, ArrayDeque<Double>> tokenize(String string)
+    Tuple<ArrayDeque<Character>, ArrayDeque<BigDecimal>> tokenize(String string)
     throws WrongExpressionException {
 	ArrayDeque<Character> operators = new ArrayDeque<Character>();
-	ArrayDeque<Double> operands = new ArrayDeque<Double>();
-	Tuple<ArrayDeque<Character>,ArrayDeque<Double>> result = new Tuple<ArrayDeque<Character>,ArrayDeque<Double>>(operators,operands);
+	ArrayDeque<BigDecimal> operands = new ArrayDeque<BigDecimal>();
+	Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>> result = new Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>>(operators,operands);
 	char expr[] = string.toCharArray();
 	int i;
 	for(i = 0; i < expr.length; ++i) {
@@ -57,8 +62,8 @@ class InfixNotation extends Notation {
 		}
 		while(!operators.isEmpty() && operands.size() >= 2 && precedence(expr[i]) >= precedence(operators.peek())) {
 		    char op = operators.removeFirst();
-		    double val1 = operands.removeFirst();
-		    double val2 = operands.removeFirst();
+		    BigDecimal val1 = operands.removeFirst();
+		    BigDecimal val2 = operands.removeFirst();
 		    operands.addFirst(operation(op, val1, val2));
 		}
 		operators.addFirst(expr[i]);
@@ -69,8 +74,8 @@ class InfixNotation extends Notation {
 	    case ')':
 		while(!operators.isEmpty() && operands.size() >= 2 && operators.peek() != '(') {
 		    char op = operators.removeFirst();
-		    double val1 = operands.removeFirst();
-		    double val2 = operands.removeFirst();
+		    BigDecimal val1 = operands.removeFirst();
+		    BigDecimal val2 = operands.removeFirst();
 		    operands.addFirst(operation(op, val1, val2));
 		}
 		if(operators.peek() == '(')
@@ -90,11 +95,12 @@ class InfixNotation extends Notation {
 		while(i < expr.length && isNumber(expr[i]))
 		    valueString += expr[i++];
 		if(i < expr.length-1 && expr[i] == '.') {
-		    valueString += expr[++i];
+		    valueString += expr[i++];
 		    while(isNumber(expr[i]) && i+1 < expr.length)
 			valueString += expr[i++];
 		}
-		double value = Double.parseDouble(valueString);
+		System.out.println("valueString: " + valueString);
+		BigDecimal value = new BigDecimal(valueString);
 		operands.addFirst(value);
 		if(i != expr.length)
 		    --i;
@@ -108,14 +114,14 @@ class InfixNotation extends Notation {
 	return result;
     }
     @Override
-    double evaluate(Tuple<ArrayDeque<Character>,ArrayDeque<Double>> tokens)
+    BigDecimal evaluate(Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>> tokens)
     throws WrongExpressionException {
 	ArrayDeque<Character> operators = tokens.getFirst();
-	ArrayDeque<Double> operands = tokens.getSecond();
+	ArrayDeque<BigDecimal> operands = tokens.getSecond();
 	while(!operators.isEmpty() && operands.size() >= 2) {
 	    char op = operators.removeFirst();
-	    double val1 = operands.removeFirst();
-	    double val2 = operands.removeFirst();
+	    BigDecimal val1 = operands.removeFirst();
+	    BigDecimal val2 = operands.removeFirst();
 	    operands.addFirst(operation(op, val1, val2));
 	}
 	if(operands.size() > 1)

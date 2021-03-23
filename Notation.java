@@ -1,4 +1,5 @@
 import java.util.ArrayDeque;
+import java.math.BigDecimal;
 
 abstract class Notation {
 
@@ -70,6 +71,6 @@ abstract class Notation {
 	throw new WrongExpressionException(string + ": Unknown notation format.");
     }
 
-    abstract Tuple<ArrayDeque<Character>, ArrayDeque<Double>> tokenize(String expr) throws WrongExpressionException;
-    abstract double evaluate(Tuple<ArrayDeque<Character>,ArrayDeque<Double>> tokens) throws WrongExpressionException;
+    abstract Tuple<ArrayDeque<Character>, ArrayDeque<BigDecimal>> tokenize(String expr) throws WrongExpressionException;
+    abstract BigDecimal evaluate(Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>> tokens) throws WrongExpressionException;
 }
