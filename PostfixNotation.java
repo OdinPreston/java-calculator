@@ -1,4 +1,5 @@
 import java.util.ArrayDeque;
+import java.lang.Math;
 
 class PostfixNotation extends Notation {
     @Override
@@ -11,10 +12,11 @@ class PostfixNotation extends Notation {
 	int i;
 	for(i = 0; i < expr.length; ++i) {
 	    switch(expr[i]) {
-	    case '+':
-	    case '-':
+	    case '^':
 	    case '*':
 	    case '/':
+	    case '+':
+	    case '-':
 		operators.add(expr[i]);
 		break;
 	    case '0':
@@ -60,17 +62,20 @@ class PostfixNotation extends Notation {
 	    op = operators.removeFirst();
 	    val = operands.removeFirst();
 	    switch(op) {
-	    case '+':
-		operands.addFirst(operands.removeFirst() + val);
-		break;
-	    case '-':
-		operands.addFirst(operands.removeFirst() - val);
+	    case '^':
+		operands.addFirst(Math.pow(operands.removeFirst(), val));
 		break;
 	    case '*':
 		operands.addFirst(operands.removeFirst() * val);
 		break;
 	    case '/':
 		operands.addFirst(operands.removeFirst() / val);
+		break;
+	    case '+':
+		operands.addFirst(operands.removeFirst() + val);
+		break;
+	    case '-':
+		operands.addFirst(operands.removeFirst() - val);
 		break;
 	    }
 	}
