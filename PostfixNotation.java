@@ -11,14 +11,20 @@ class PostfixNotation extends Notation {
 	Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>> result = new Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>>(operators,operands);
 	char expr[] = string.toCharArray();
 	int i;
+	boolean unary = false;
 	for(i = 0; i < expr.length; ++i) {
 	    switch(expr[i]) {
 	    case '^':
 	    case '*':
 	    case '/':
 	    case '+':
-	    case '-':
 		operators.add(expr[i]);
+		break;
+	    case '-':
+		if(i != expr.length-1 && isNumber(expr[i+1]))
+		    unary = true;
+		else
+		    operators.add(expr[i]);
 		break;
 	    case '0':
 	    case '1':
@@ -38,8 +44,10 @@ class PostfixNotation extends Notation {
 		    while(isNumber(expr[i]) && i+1 < expr.length)
 			valueString += expr[i++];
 		}
+		valueString = (unary) ? ("-" + valueString) : valueString;
 		BigDecimal value = new BigDecimal(valueString);
 		operands.addFirst(value);
+		unary = false;
 		if(i != expr.length-1)
 		    --i;
 		break;

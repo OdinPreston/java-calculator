@@ -45,6 +45,7 @@ class InfixNotation extends Notation {
 	Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>> result = new Tuple<ArrayDeque<Character>,ArrayDeque<BigDecimal>>(operators,operands);
 	char expr[] = string.toCharArray();
 	int i;
+	boolean unary = false;
 	for(i = 0; i < expr.length; ++i) {
 	    switch(expr[i]) {
 	    case '^':
@@ -52,6 +53,12 @@ class InfixNotation extends Notation {
 	    case '/':
 	    case '+':
 	    case '-':		
+		if( (expr[i] == '-' && i == 0) ||
+		    (expr[i] == '-' && i != expr.length-1 && isNumber(expr[i+1])) &&
+		    (!isNumber(expr[i-1])) ) {
+		    unary = true;		    
+		    continue;
+		}
 		if(operators.isEmpty() || precedence(expr[i]) <= precedence(operators.peek())) {
 		    operators.addFirst(expr[i]);		    
 		    break;
@@ -72,10 +79,15 @@ class InfixNotation extends Notation {
 		    char op = operators.removeFirst();
 		    BigDecimal val1 = operands.removeFirst();
 		    BigDecimal val2 = operands.removeFirst();
+		    System.out.println("op: " + op + "val1 " + val1 + "val2 " + val2);
 		    operands.addFirst(operation(op, val1, val2));
 		}
 		if(operators.peek() == '(')
 		    operators.removeFirst();
+		if(operators.peek() == '-') {
+		    operators.removeFirst();		    
+		    operands.addFirst(new BigDecimal("-" + operands.removeFirst()));
+		}
 		break;
 	    case '0':
 	    case '1':
@@ -95,6 +107,7 @@ class InfixNotation extends Notation {
 		    while(isNumber(expr[i]) && i+1 < expr.length)
 			valueString += expr[i++];
 		}
+		valueString = (unary) ? ("-" + valueString) : valueString;
 		BigDecimal value = new BigDecimal(valueString);
 		operands.addFirst(value);
 		if(i != expr.length)
