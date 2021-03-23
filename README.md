@@ -34,5 +34,6 @@ will produce
 ```
 ## Todo
 1. [x] ~~Add the exponent (^) operator.~~ 
-2. [ ] Use BigDecimal instead of double.
+2. [x] ~~Use BigDecimal instead of double.~~
 3. [ ] Make a simple GUI interface launchable when ran with no arguments.
+4. [ ] Add support for negative numbers.
