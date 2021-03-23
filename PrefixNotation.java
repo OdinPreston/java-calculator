@@ -18,7 +18,6 @@ class PrefixNotation extends Notation {
 	    case '/':
 	    case '+':
 	    case '-':
-		System.out.println("Pushing " + expr[i] + " to operators");
 		operators.addFirst(expr[i]);
 		break;
 	    case '0':
@@ -40,7 +39,6 @@ class PrefixNotation extends Notation {
 			valueString += expr[i++];
 		}
 		BigDecimal value = new BigDecimal(valueString);
-		System.out.println("Pushing " + value + " to operands");
 		operands.addFirst(value);
 		if(i != expr.length-1)
 		    --i;
@@ -63,9 +61,6 @@ class PrefixNotation extends Notation {
 	while(!operators.isEmpty() && operands.size() >= 2) {
 	    op = operators.removeFirst();
 	    val = operands.removeFirst();
-	    System.out.println("op: " + op);
-	    System.out.println("val: " + val);
-	    System.out.println("val2: " + operands.getFirst());
 	    switch(op) {
 	    case '^':
 		operands.addFirst(new BigDecimal(Math.pow(operands.removeFirst().doubleValue(), val.doubleValue())));

@@ -24,10 +24,6 @@ class InfixNotation extends Notation {
     throws WrongExpressionException {
 	switch(op) {
 	case '^':
-	    System.out.println("val2 big: "+val2);
-	    System.out.println("val2: " + val2.doubleValue());
-	    System.out.println("val1: " + val1.doubleValue());
-	    System.out.println("VALUE: " + Math.pow(val2.doubleValue(), val1.doubleValue()));
 	    return new BigDecimal(Math.pow(val2.doubleValue(), val1.doubleValue()));
 	case '*':
 	    return val2.multiply(val1);
@@ -99,7 +95,6 @@ class InfixNotation extends Notation {
 		    while(isNumber(expr[i]) && i+1 < expr.length)
 			valueString += expr[i++];
 		}
-		System.out.println("valueString: " + valueString);
 		BigDecimal value = new BigDecimal(valueString);
 		operands.addFirst(value);
 		if(i != expr.length)
