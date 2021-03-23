@@ -58,13 +58,14 @@ abstract class Notation {
 	int end = ((temp = precedingNonWhitespace(expr.length, expr)) == -1) ? expr.length-1 : temp;
 	if(expr.length <= 0) {
 	    throw new WrongExpressionException("Length of expression <= 0.");
-	} else if(isOperator(expr[start])) {
+	} else if(isOperator(expr[start]) && !isOperator(expr[end])) {
 	    System.out.println(string + ": Prefix Notation.");
 	    return new PrefixNotation();
-	} else if(isOperator(expr[end])) {
+	} else if(isOperator(expr[end]) && !isOperator(expr[start])) {
 	    System.out.println(string + ": Postfix Notation.");
 	    return new PostfixNotation();
-	} else if(isNumber(expr[start]) || expr[start] == '(') {
+	} else if( (isNumber(expr[start]) || expr[start] == '(') &&
+		   (isNumber(expr[end]) || expr[end] == ')') ) {
 	    System.out.println(string + ": Infix Notation.");
 	    return new InfixNotation();
 	}
