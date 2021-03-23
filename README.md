@@ -1,6 +1,6 @@
 # Java Calculator
 A simple calculator capable of evaluating infix, postfix and prefix expressions.
-For now, *, /, + and - are supported, plus parentheses for infix.
+For now, '^', '*', '/', '+', '-' are supported. Additionally, '(' and ')' are valid in infix notation.
 ## Building
 ```bash
 git clone https://github.com/OdinPreston/java-calculator.git
@@ -33,6 +33,6 @@ will produce
 200.0
 ```
 ## Todo
-1. Add the exponent (^) operator.
-2. Use BigDecimal instead of double.
-3. Make a simple GUI interface launchable when ran with no arguments.
+1. [x] ~~Add the exponent (^) operator.~~ 
+2. [ ] Use BigDecimal instead of double.
+3. [ ] Make a simple GUI interface launchable when ran with no arguments.
