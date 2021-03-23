@@ -1,4 +1,5 @@
 import java.util.ArrayDeque;
+import java.lang.Math;
 
 class InfixNotation extends Notation {
 
@@ -21,6 +22,8 @@ class InfixNotation extends Notation {
     private static double operation(char op, double val1, double val2)
     throws WrongExpressionException {
 	switch(op) {
+	case '^':
+	    return Math.pow(val2, val1);
 	case '*':
 	    return val2 * val1;
 	case '/':
@@ -43,6 +46,7 @@ class InfixNotation extends Notation {
 	int i;
 	for(i = 0; i < expr.length; ++i) {
 	    switch(expr[i]) {
+	    case '^':
 	    case '*':
 	    case '/':
 	    case '+':
@@ -67,7 +71,6 @@ class InfixNotation extends Notation {
 		    char op = operators.removeFirst();
 		    double val1 = operands.removeFirst();
 		    double val2 = operands.removeFirst();
-		    System.out.println("op: " + op);
 		    operands.addFirst(operation(op, val1, val2));
 		}
 		if(operators.peek() == '(')

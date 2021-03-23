@@ -1,4 +1,5 @@
 import java.util.ArrayDeque;
+import java.lang.Math;
 
 class PrefixNotation extends Notation {
     @Override
@@ -11,10 +12,11 @@ class PrefixNotation extends Notation {
 	int i;
 	for(i = 0; i < expr.length; ++i) {
 	    switch(expr[i]) {
-	    case '+':
-	    case '-':
+	    case '^':
 	    case '*':
 	    case '/':
+	    case '+':
+	    case '-':
 		operators.addFirst(expr[i]);
 		break;
 	    case '0':
@@ -60,17 +62,20 @@ class PrefixNotation extends Notation {
 	    op = operators.removeFirst();
 	    val = operands.removeFirst();
 	    switch(op) {
-	    case '+':
-		operands.addFirst(val + operands.removeFirst());
-		break;
-	    case '-':
-		operands.addFirst(val - operands.removeFirst());
+	    case '^':
+		operands.addFirst(Math.pow(val, operands.removeFirst()));
 		break;
 	    case '*':
 		operands.addFirst(val * operands.removeFirst());
 		break;
 	    case '/':
 		operands.addFirst(val / operands.removeFirst());
+		break;
+	    case '+':
+		operands.addFirst(val + operands.removeFirst());
+		break;
+	    case '-':
+		operands.addFirst(val - operands.removeFirst());
 		break;
 	    }
 	}

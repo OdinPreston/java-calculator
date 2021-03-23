@@ -4,6 +4,7 @@ abstract class Notation {
 
     private static boolean isOperator(char c) {
 	switch(c) {
+	case '^':
 	case '*':
 	case '/':
 	case '+':
