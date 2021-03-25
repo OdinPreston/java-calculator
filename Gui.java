@@ -15,8 +15,6 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
-import java.awt.KeyEventPostProcessor; //temp
-import java.awt.DefaultKeyboardFocusManager; //temp
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseEvent;
@@ -33,9 +31,6 @@ class Gui {
     final static Color STANDARD_BACKGROUND = Color.decode("#fdf6e3");
     final static Color STANDARD_FOREGROUND = Color.decode("#657b83");
     final static Color ALTERNATIVE_BACKGROUND = Color.decode("#eee8d5");
-    final static Color YELLOW = Color.decode("#b58900");
-    final static Color ORANGE = Color.decode("#cb4b16");
-    final static Color GREEN = Color.decode("#859900");
     final static Color BASE1 = Color.decode("#93a1a1");
 
     private String expression = new String("");
@@ -46,66 +41,12 @@ class Gui {
     private JTextField textField;
     private JScrollBar scrollBar;
 
-    private KeyEventPostProcessor kepp = new KeyEventPostProcessor() {
-	    public boolean postProcessKeyEvent(KeyEvent e) {
-		if(e.getID() != KeyEvent.KEY_PRESSED)
-		    return false;
-		final char defaults[] = {
-		    ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-		    '^', '*', '/', '+', '-', '.', '(', ')' };
-		switch(e.getKeyChar()) {
-		case 8: // backspace key
-		case 'D':
-		case 'd':
-		    expression = (expression.length() > 0) ? expression.substring(0, expression.length()-1) : "";
-		    textField.setText(expression);
-		    return true;
-		case 'C':
-		case 'c':
-		    expression = "";
-		    textField.setText(expression);
-		    return true;
-		case 'X':
-		case 'x':
-		    Toolkit.getDefaultToolkit()
-			.getSystemClipboard()
-			.setContents(new StringSelection(textField.getText()), null);
-		    return true;
-		case 'Q':
-		case 'q':
-		case 27: // esc key
-		    System.exit(0);
-		    return true;
-		case 10: // enter key
-		case '=':
-		    Notation n;
-		    try {
-			n = Notation.getType(expression);
-			expression = "" + n.evaluate(n.tokenize(expression));
-			textField.setText(expression);
-			expression = "";
-		    } catch(WrongExpressionException exc) {
-			JOptionPane.showMessageDialog(null, exc.message);
-			textField.setText(expression);
-		    }
-		    return true;
-		default:
-		    for(char element : defaults) {
-			if(element == e.getKeyChar()) {
-			    expression += element;
-			    textField.setText(expression);
-			    return true;
-			}
-		    }
-		}
-		return false;
-	    }
-	};
-
     private static GridBagConstraints c = new GridBagConstraints();
 
     private JButton[] createButtons() {
-	String labels[] = { "D", "*", "/", "1", "2", "3", "C", "+", "-", "4", "5", "6", "Q", "(", ")", "7", "8", "9", "^", "_", ".", "0", "=" };
+	String labels[] = {
+	    "D", "*", "/", "1", "2", "3", "C", "+", "-", "4",
+	    "5", "6", "Q", "(", ")", "7", "8", "9", "^", "_", ".", "0", "=" };
 	final JButton buttons[] = new JButton[labels.length];
 	int i;
 	for(i = 0; i < labels.length; ++i) {
@@ -125,7 +66,7 @@ class Gui {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 			bindButton(buttons[j]);
-			}
+		    }
 		});	    
 	}
     }
@@ -135,10 +76,12 @@ class Gui {
 	case 'D':
 	    expression = (expression.length() > 0) ? expression.substring(0, expression.length()-1) : "";
 	    textField.setText(expression);
+	    mainDialog.requestFocus();
 	    break;
 	case 'C':
 	    expression = "";
 	    textField.setText(expression);
+	    mainDialog.requestFocus();
 	    break;
 	case 'Q':
 	    System.exit(0);
@@ -146,22 +89,25 @@ class Gui {
 	case '_':
 	    expression += " ";
 	    textField.setText(expression);
+	    mainDialog.requestFocus();
 	    break;
 	case '=':
 	    Notation n;
 	    try {
 		n = Notation.getType(expression);
-		expression = "" + n.evaluate(n.tokenize(expression));
+		expression = n.evaluate(n.tokenize(expression)).toPlainString();
 		textField.setText(expression);
 		expression = "";
 	    } catch(WrongExpressionException e) {
 		JOptionPane.showMessageDialog(null, e.message);
 		textField.setText(expression);
 	    }
+	    mainDialog.requestFocus();
 	    break;
 	default:
 	    expression += button.getText();
 	    textField.setText(expression);	    
+	    mainDialog.requestFocus();
 	    break;
 	}
     }
@@ -171,9 +117,82 @@ class Gui {
 	mainDialog.getContentPane().setBackground(STANDARD_BACKGROUND);
 	mainDialog.setTitle("Java calculator");
 	mainDialog.setSize(350, 320);
+	mainDialog.setFocusable(true);
 	mainDialog.setLayout(new GridBagLayout());
 	mainDialog.setLocationRelativeTo(null);
 	mainDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	mainDialog.addKeyListener(new KeyAdapter() {
+		@Override
+		public void keyPressed(KeyEvent e) {
+		    if(e.getID() != KeyEvent.KEY_PRESSED)
+			return;
+		    final char defaults[] = {
+			' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+			'^', '*', '/', '+', '-', '.', '(', ')' };
+		    switch(e.getKeyChar()) {
+		    case 8: // backspace key
+		    case 'D':
+		    case 'd':
+			expression = (expression.length() > 0) ? expression.substring(0, expression.length()-1) : "";
+			textField.setText(expression);
+			break;
+		    case 'C':
+		    case 'c':
+			expression = "";
+			textField.setText(expression);
+			break;
+		    case 'X':
+		    case 'x':
+			Toolkit.getDefaultToolkit()
+			    .getSystemClipboard()
+			    .setContents(new StringSelection(textField.getText()), null);
+			break;
+		    case 'Q':
+		    case 'q':
+		    case 27: // esc key
+			System.exit(0);
+			break;
+		    case 10: // enter key
+		    case '=':
+			Notation n;
+			try {
+			    n = Notation.getType(expression);
+			    expression = n.evaluate(n.tokenize(expression)).toPlainString();
+			    System.out.println(expression);
+			    textField.setText(expression);
+			    expression = "";
+			} catch(WrongExpressionException exc) {
+			    JOptionPane.showMessageDialog(null, exc.message);
+			    textField.setText(expression);
+			}
+			break;
+		    default:
+			if(e.getKeyCode() == 37) {
+			    int minimum = scrollBar.getMinimum();
+			    int val = scrollBar.getValue();
+			    int increment = scrollBar.getBlockIncrement();
+			    val = (val-increment >= minimum) ? val-increment : minimum;
+			    scrollBar.setValue(val);
+			    break;
+			} else if(e.getKeyCode() == 39) {
+			    int maximum = scrollBar.getMaximum();
+			    int val = scrollBar.getValue();
+			    int increment = scrollBar.getBlockIncrement();
+			    val = (val+increment <= maximum) ? val+increment : maximum;
+			    scrollBar.setValue(val);
+			    break;
+			}
+			for(char element : defaults) {
+			    if(element == e.getKeyChar()) {
+				expression += element;
+				textField.setText(expression);
+				break;
+			    }
+			}
+			break;
+		    }
+		}
+	    });
 	return mainDialog;
     }
 
@@ -205,6 +224,7 @@ class Gui {
 			    .getSystemClipboard()
 			    .setContents(new StringSelection(textField.getText()), null);
 		    }
+		    mainDialog.requestFocus();
 		}
 	    });
 	return textField;
@@ -268,8 +288,6 @@ class Gui {
     }
 
     Gui() {       
-	DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager().
-	    addKeyEventPostProcessor(kepp);
 	mainDialog = createMainDialog();
 	textField = createDisplayTextField();
 	buttons = createButtons();
