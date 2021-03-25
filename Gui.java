@@ -1,6 +1,27 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JDialog;
+import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.BoxLayout;
+import javax.swing.JTextField;
+import javax.swing.JScrollBar;
+import javax.swing.JOptionPane;
+import javax.swing.BorderFactory;
+import javax.swing.BoundedRangeModel;
+
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.Toolkit;
+import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.GridBagConstraints;
+import java.awt.event.MouseListener;
+import java.awt.event.ActionListener;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 
 class Gui {
     final static int MAX_COLUMNS = 5;
@@ -98,11 +119,11 @@ class Gui {
 	    Notation n;
 	    try {
 		n = Notation.getType(expression);
-		textField.setText("" + n.evaluate(n.tokenize(expression)));
+		expression = "" + n.evaluate(n.tokenize(expression));
+		textField.setText(expression);
 		expression = "";
 	    } catch(WrongExpressionException e) {
 		JOptionPane.showMessageDialog(null, e.message);
-		//		showMessage(mainDialog,e.message);
 		textField.setText(expression);
 	    }
 	    break;
@@ -144,6 +165,27 @@ class Gui {
 	textField.setBackground(ALTERNATIVE_BACKGROUND);
 	textField.setForeground(STANDARD_FOREGROUND);
 	textField.setBorder(BorderFactory.createEmptyBorder());
+	textField.addMouseListener(new MouseListener() {
+		// We need to implement all of these,
+		// but only mousePressed is of interest
+		// (mouseClicked is press and release)
+		@Override
+		public void mousePressed(MouseEvent e) {
+		    if(e.getButton() == MouseEvent.BUTTON1) {
+			Toolkit.getDefaultToolkit()
+			    .getSystemClipboard()
+			    .setContents(new StringSelection(textField.getText()), null);
+		    }
+		}
+		@Override
+		public void mouseClicked(MouseEvent e) {}
+		@Override
+		public void mouseReleased(MouseEvent e) {}
+		@Override
+		public void mouseExited(MouseEvent e) {}
+		@Override
+		public void mouseEntered(MouseEvent e) {}
+	    });
 	return textField;
     }
 
