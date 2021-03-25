@@ -15,8 +15,13 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
+import java.awt.KeyEventPostProcessor; //temp
+import java.awt.DefaultKeyboardFocusManager; //temp
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.GridBagConstraints;
 import java.awt.event.MouseListener;
 import java.awt.event.ActionListener;
@@ -40,6 +45,62 @@ class Gui {
     private JPanel displayPanel;
     private JTextField textField;
     private JScrollBar scrollBar;
+
+    private KeyEventPostProcessor kepp = new KeyEventPostProcessor() {
+	    public boolean postProcessKeyEvent(KeyEvent e) {
+		if(e.getID() != KeyEvent.KEY_PRESSED)
+		    return false;
+		final char defaults[] = {
+		    ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+		    '^', '*', '/', '+', '-', '.', '(', ')' };
+		switch(e.getKeyChar()) {
+		case 'D':
+		case 'd':
+		    expression = (expression.length() > 0) ? expression.substring(0, expression.length()-1) : "";
+		    textField.setText(expression);
+		    return true;
+		case 'C':
+		case 'c':
+		    expression = "";
+		    textField.setText(expression);
+		    break;
+		case 'X':
+		case 'x':
+		    Toolkit.getDefaultToolkit()
+			.getSystemClipboard()
+			.setContents(new StringSelection(textField.getText()), null);
+		    break;
+		case 'Q':
+		case 'q':
+		case 27: // esc key
+		    System.exit(0);
+		    break;
+		case '=':
+		    Notation n;
+		    try {
+			n = Notation.getType(expression);
+			expression = "" + n.evaluate(n.tokenize(expression));
+			textField.setText(expression);
+			expression = "";
+		    } catch(WrongExpressionException exc) {
+			JOptionPane.showMessageDialog(null, exc.message);
+			textField.setText(expression);
+		    }
+		    break;
+		default:
+		    for(char element : defaults) {
+			if(element == e.getKeyChar()) {
+			    expression += element;
+			    textField.setText(expression);
+			    break;
+			}
+		    }
+		    break;
+		}
+		return true;
+	    }
+	};
+
     private static GridBagConstraints c = new GridBagConstraints();
 
     private JButton[] createButtons() {
@@ -135,10 +196,7 @@ class Gui {
 	textField.setBackground(ALTERNATIVE_BACKGROUND);
 	textField.setForeground(STANDARD_FOREGROUND);
 	textField.setBorder(BorderFactory.createEmptyBorder());
-	textField.addMouseListener(new MouseListener() {
-		// We need to implement all of these,
-		// but only mousePressed is of interest
-		// (mouseClicked is press and release)
+	textField.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mousePressed(MouseEvent e) {
 		    if(e.getButton() == MouseEvent.BUTTON1) {
@@ -147,14 +205,6 @@ class Gui {
 			    .setContents(new StringSelection(textField.getText()), null);
 		    }
 		}
-		@Override
-		public void mouseClicked(MouseEvent e) {}
-		@Override
-		public void mouseReleased(MouseEvent e) {}
-		@Override
-		public void mouseExited(MouseEvent e) {}
-		@Override
-		public void mouseEntered(MouseEvent e) {}
 	    });
 	return textField;
     }
@@ -216,7 +266,9 @@ class Gui {
 	md.add(buttonPanel, c);
     }
 
-    Gui() {
+    Gui() {       
+	DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager().
+	    addKeyEventPostProcessor(kepp);
 	mainDialog = createMainDialog();
 	textField = createDisplayTextField();
 	buttons = createButtons();
