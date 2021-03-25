@@ -31,7 +31,7 @@ class InfixNotation extends Notation {
 	case '/':
 	    if(val1.compareTo(new BigDecimal("0")) == 0)
 		throw new WrongExpressionException("Division by zero");
-	    return val2.divide(val1);
+	    return val2.divide(val1, 100, RoundingMode.HALF_UP);
 	case '+':
 	    return val2.add(val1);
 	case '-':

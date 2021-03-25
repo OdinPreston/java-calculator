@@ -82,7 +82,7 @@ class PostfixNotation extends Notation {
 	    case '/':
 		if(val.compareTo(new BigDecimal("0")) == 0)
 		    throw new WrongExpressionException("Division by zero");
-		operands.addFirst(operands.removeFirst().divide(val));
+		operands.addFirst(operands.removeFirst().divide(val, 100, RoundingMode.HALF_UP));
 		break;
 	    case '+':
 		operands.addFirst(operands.removeFirst().add(val));
