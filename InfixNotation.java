@@ -82,9 +82,9 @@ class InfixNotation extends Notation {
 		    System.out.println("op: " + op + "val1 " + val1 + "val2 " + val2);
 		    operands.addFirst(operation(op, val1, val2));
 		}
-		if(operators.peek() == '(')
+		if(!operators.isEmpty() && operators.peek() == '(')
 		    operators.removeFirst();
-		if(operators.peek() == '-') {
+		if(!operators.isEmpty() && operators.peek() == '-') {
 		    operators.removeFirst();		    
 		    operands.addFirst(new BigDecimal("-" + operands.removeFirst()));
 		}
