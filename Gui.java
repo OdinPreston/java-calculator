@@ -54,6 +54,7 @@ class Gui {
 		    ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 		    '^', '*', '/', '+', '-', '.', '(', ')' };
 		switch(e.getKeyChar()) {
+		case 8: // backspace key
 		case 'D':
 		case 'd':
 		    expression = (expression.length() > 0) ? expression.substring(0, expression.length()-1) : "";
