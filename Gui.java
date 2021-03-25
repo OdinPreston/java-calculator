@@ -43,7 +43,7 @@ class Gui {
     private static GridBagConstraints c = new GridBagConstraints();
 
     private JButton[] createButtons() {
-	String labels[] = { "D", "*", "/", "1", "2", "3", "C", "+", "-", "4", "5", "6", "(", ")", "7", "8", "9", "^", "_", ".", "0", "=" };
+	String labels[] = { "D", "*", "/", "1", "2", "3", "C", "+", "-", "4", "5", "6", "Q", "(", ")", "7", "8", "9", "^", "_", ".", "0", "=" };
 	final JButton buttons[] = new JButton[labels.length];
 	int i;
 	for(i = 0; i < labels.length; ++i) {
@@ -68,39 +68,6 @@ class Gui {
 	}
     }
 
-    static private void showMessage(JDialog owner, String message) {
-	final JDialog dialog = new JDialog(owner);
-	JTextArea label = new JTextArea(2, 20);
-	JButton button = new JButton("OK");
-
-	dialog.getContentPane().setBackground(STANDARD_BACKGROUND);
-	dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-	dialog.setLocationRelativeTo(owner);
-	dialog.setSize(200, 200);
-
-	button.setBackground(ALTERNATIVE_BACKGROUND);
-	button.setForeground(STANDARD_FOREGROUND);
-
-	label.setWrapStyleWord(true);
-	label.setLineWrap(true);
-	label.setText(message);
-	label.setForeground(STANDARD_FOREGROUND);
-	label.setBackground(STANDARD_BACKGROUND);
-	label.setEditable(false);
-	label.setBorder(BorderFactory.createEmptyBorder());
-	label.setFont(new Font("Default", Font.BOLD, 25));
-
-	button.addActionListener(new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-		    dialog.setVisible(false);
-		}
-	    });
-	dialog.add(label, BorderLayout.PAGE_START);
-	dialog.add(button, BorderLayout.PAGE_END);
-	dialog.setVisible(true);
-    }
-
     private void bindButton(JButton button) {
 	switch(button.getText().toCharArray()[0]) {
 	case 'D':
@@ -110,6 +77,9 @@ class Gui {
 	case 'C':
 	    expression = "";
 	    textField.setText(expression);
+	    break;
+	case 'Q':
+	    System.exit(0);
 	    break;
 	case '_':
 	    expression += " ";
@@ -225,7 +195,7 @@ class Gui {
 	c.gridx = c.gridy = 0;
 	c.fill = GridBagConstraints.BOTH;
 	for(i = 0; i < buttons.length; ++i) {
-	    if(c.gridx == MAX_COLUMNS+1 && c.gridy >= 1) {
+	    if(c.gridx == MAX_COLUMNS+1 && c.gridy >= 2) {
 		c.gridx = 1;
 		c.gridy += 1;
 	    } else if(c.gridx == MAX_COLUMNS+1) {
