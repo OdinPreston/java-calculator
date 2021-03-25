@@ -50,7 +50,7 @@ ESC    | Quit program
 `+`    | Insert `+` into expression
 `-`    | Insert `-` into expression
 `.`    | Insert `.` into expression
-SPACE  | Insert ` ` (a blank) into expression
+SPACE  | Insert a blank into expression
 `(`    | Insert `(` into expression
 `)`    | Insert `)` into expression
 0-9    | Insert a number into expression
@@ -63,4 +63,4 @@ SPACE  | Insert ` ` (a blank) into expression
 3. [x] ~~Make a simple GUI interface launchable when ran with no arguments.~~
 4. [x] ~~Add support for negative numbers.~~
 5. [x] ~~Make the number displayed in GUI copyable to clipboard by clicking.~~
-6. [ ] Configure GUI to take input from keyboard as well.
+6. [x] ~~Configure GUI to take input from keyboard as well.~~
