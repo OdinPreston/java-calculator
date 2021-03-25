@@ -7,7 +7,7 @@ public class JavaCalculator {
 	    for(String s : args) {
 		try {
 		    n = Notation.getType(s);
-		    System.out.println(n.evaluate(n.tokenize(s)));
+		    System.out.println(n.evaluate(n.tokenize(s)).toPlainString());
 		} catch(WrongExpressionException e) {
 		    System.out.println(e.message);
 		    continue;
