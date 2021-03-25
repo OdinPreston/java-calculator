@@ -1,6 +1,7 @@
 import java.util.ArrayDeque;
 import java.math.BigDecimal;
 import java.lang.Math;
+import java.math.RoundingMode;
 
 class PostfixNotation extends Notation {
     @Override
@@ -37,11 +38,11 @@ class PostfixNotation extends Notation {
 	    case '8':
 	    case '9':
 		String valueString = new String();
-		while(isNumber(expr[i]) && i+1 < expr.length)
+		while(i < expr.length && isNumber(expr[i]))
 		    valueString += expr[i++];
 		if(expr[i] == '.') {
 		    valueString += expr[i++];
-		    while(isNumber(expr[i]) && i+1 < expr.length)
+		    while(i < expr.length && isNumber(expr[i]))
 			valueString += expr[i++];
 		}
 		valueString = (unary) ? ("-" + valueString) : valueString;
@@ -77,7 +78,7 @@ class PostfixNotation extends Notation {
 		operands.addFirst(operands.removeFirst().multiply(val));
 		break;
 	    case '/':
-		operands.addFirst(operands.removeFirst().divide(val));
+		operands.addFirst(operands.removeFirst().divide(val, 100, RoundingMode.HALF_EVEN));
 		break;
 	    case '+':
 		operands.addFirst(operands.removeFirst().add(val));

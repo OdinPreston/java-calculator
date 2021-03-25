@@ -1,6 +1,7 @@
 import java.util.ArrayDeque;
 import java.math.BigDecimal;
 import java.lang.Math;
+import java.math.RoundingMode;
 
 class InfixNotation extends Notation {
 
@@ -28,7 +29,7 @@ class InfixNotation extends Notation {
 	case '*':
 	    return val2.multiply(val1);
 	case '/':
-	    return val2.divide(val1);
+	    return val2.divide(val1, 100, RoundingMode.HALF_EVEN);
 	case '+':
 	    return val2.add(val1);
 	case '-':
@@ -104,7 +105,7 @@ class InfixNotation extends Notation {
 		    valueString += expr[i++];
 		if(i < expr.length-1 && expr[i] == '.') {
 		    valueString += expr[i++];
-		    while(isNumber(expr[i]) && i+1 < expr.length)
+		    while(i < expr.length && isNumber(expr[i]))
 			valueString += expr[i++];
 		}
 		valueString = (unary) ? ("-" + valueString) : valueString;

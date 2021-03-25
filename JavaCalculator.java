@@ -9,6 +9,7 @@ public class JavaCalculator {
 		    n = Notation.getType(s);
 		    System.out.println(n.evaluate(n.tokenize(s)));
 		} catch(WrongExpressionException e) {
+		    System.out.println(e.message);
 		    continue;
 		}
 	    }	    

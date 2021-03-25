@@ -1,6 +1,7 @@
 import java.util.ArrayDeque;
 import java.math.BigDecimal;
 import java.lang.Math;
+import java.math.RoundingMode;
 
 class PrefixNotation extends Notation {
     @Override
@@ -46,7 +47,7 @@ class PrefixNotation extends Notation {
 		    valueString += expr[i++];
 		if(i < expr.length-1 && expr[i] == '.') {
 		    valueString += expr[i++];
-		    while(isNumber(expr[i]) && i+1 < expr.length)
+		    while(i < expr.length && isNumber(expr[i]))
 			valueString += expr[i++];
 		}
 		valueString = (unary) ? ("-" + valueString) : valueString;
@@ -81,7 +82,7 @@ class PrefixNotation extends Notation {
 		operands.addFirst(operands.removeFirst().multiply(val));
 		break;
 	    case '/':
-		operands.addFirst(operands.removeFirst().divide(val));
+		operands.addFirst(operands.removeFirst().divide(val, 100, RoundingMode.HALF_EVEN));
 		break;
 	    case '+':
 		operands.addFirst(operands.removeFirst().add(val));
