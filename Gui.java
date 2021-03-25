@@ -96,7 +96,6 @@ class Gui {
 			    break;
 			}
 		    }
-		    System.out.println(e.getKeyCode());
 		    break;
 		}
 		return true;
