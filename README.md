@@ -43,9 +43,9 @@ C, d | Clear display
 X, x | Copy expression to clipboard
 Q, q | Quit program
 ESC  | Quit program
-=    | Evaluate expression
-^    | Insert ^ into expression
-*    | Insert * into expression
+`=`    | Evaluate expression
+`^`    | Insert ^ into expression
+`*`    | Insert * into expression
 /    | Insert / into expression
 +    | Insert + into expression
 -    | Insert - into expression
