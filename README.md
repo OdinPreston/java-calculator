@@ -35,9 +35,14 @@ will produce
 ```
 ### GUI
 There is also GUI, accessible if you run the program without any command line arguments. The images of how it looks like are below. It has the added benefit of being able to copy the output at any given time, by clicking the number display with left mouse button.
-## Images
 ![Gui 1](gui1.webp)
 ![Gui 2](gui2.webp)
+#### Keybindings
+Key | Action
+----|-------
+D,d | Backspace
+C,d | Clear display
+X,x | Copy expression to clipboard
 ## Todo
 1. [x] ~~Add the exponent (^) operator.~~ 
 2. [x] ~~Use BigDecimal instead of double.~~
