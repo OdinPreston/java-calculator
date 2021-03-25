@@ -21,6 +21,7 @@ chmod +x JavaCalculator
 Where `/path/to/java` is the absolute path to java executable.
 Then you can use JavaCalculator to launch the program, as any other binary (even though it's not a binary).
 ## Usage
+### Command line
 For command line usage, run with command-line arguments, where each argument is a single expression in any of the supported notations. For example:
 `JavaCalculator "2+2*50" "* / 9 3 20" "20 6 4 + *"`
 will produce
@@ -32,6 +33,7 @@ will produce
 20 6 4 + *: Postfix Notation.
 200.0
 ```
+### GUI
 There is also GUI, accessible if you run the program without any command line arguments. The images of how it looks like are below. It has the added benefit of being able to copy the output at any given time, by clicking the number display with left mouse button.
 ## Images
 ![Gui 1](gui1.webp)
