@@ -38,23 +38,24 @@ There is also GUI, accessible if you run the program without any command line ar
 #### Keybindings
 Key | Action
 ----|-------
-D, d   | Backspace
-C, d   | Clear display
-X, x   | Copy expression to clipboard
-Q, q   | Quit program
-ESC    | Quit program
-`=`    | Evaluate expression
-`^`    | Insert `^` into expression
-`*`    | Insert `*` into expression
-`/`    | Insert `/` into expression
-`+`    | Insert `+` into expression
-`-`    | Insert `-` into expression
-`.`    | Insert `.` into expression
-`(`    | Insert `(` into expression
-`)`    | Insert `)` into expression
-SPACE  | Insert a blank into expression
-ENTER  | Evaluate expression
-0-9    | Insert a number into expression
+D, d	  | Backspace
+C, d   	  | Clear display
+X, x   	  | Copy expression to clipboard
+Q, q   	  | Quit program
+ESC    	  | Quit program
+`=`    	  | Evaluate expression
+`^`    	  | Insert `^` into expression
+`*`    	  | Insert `*` into expression
+`/`    	  | Insert `/` into expression
+`+`    	  | Insert `+` into expression
+`-`    	  | Insert `-` into expression
+`.`    	  | Insert `.` into expression
+`(`    	  | Insert `(` into expression
+`)`    	  | Insert `)` into expression
+SPACE  	  | Insert a blank into expression
+BACKSPACE | Backspace
+ENTER  	  | Evaluate expression
+0-9    	  | Insert a number into expression
 #### Images
 ![Gui 1](gui1.webp)
 ![Gui 2](gui2.webp)
