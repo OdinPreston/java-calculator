@@ -82,7 +82,6 @@ class InfixNotation extends Notation {
 		    char op = operators.removeFirst();
 		    BigDecimal val1 = operands.removeFirst();
 		    BigDecimal val2 = operands.removeFirst();
-		    System.out.println("op: " + op + "val1 " + val1 + "val2 " + val2);
 		    operands.addFirst(operation(op, val1, val2));
 		}
 		if(!operators.isEmpty() && operators.peek() == '(')
