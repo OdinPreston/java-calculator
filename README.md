@@ -44,15 +44,15 @@ X, x | Copy expression to clipboard
 Q, q | Quit program
 ESC  | Quit program
 =    | Evaluate expression
-^    | Insert `^` into expression
-*    | Insert `*` into expression
-/    | Insert `/` into expression
-+    | Insert `+` into expression
--    | Insert `-` into expression
-.    | Insert `.` into expression
-SPACE| Insert `' '` into expression
-(    | Insert `(` into expression
-)    | Insert `)` into expression
+^    | Insert ^ into expression
+*    | Insert * into expression
+/    | Insert / into expression
++    | Insert + into expression
+-    | Insert - into expression
+.    | Insert . into expression
+SPACE| Insert ' ' into expression
+(    | Insert ( into expression
+)    | Insert ) into expression
 0-9  | Insert a number into expression
 #### Images
 ![Gui 1](gui1.webp)
