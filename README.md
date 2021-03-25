@@ -50,9 +50,10 @@ ESC    | Quit program
 `+`    | Insert `+` into expression
 `-`    | Insert `-` into expression
 `.`    | Insert `.` into expression
-SPACE  | Insert a blank into expression
 `(`    | Insert `(` into expression
 `)`    | Insert `)` into expression
+SPACE  | Insert a blank into expression
+ENTER  | Evaluate expression
 0-9    | Insert a number into expression
 #### Images
 ![Gui 1](gui1.webp)

@@ -75,6 +75,7 @@ class Gui {
 		case 27: // esc key
 		    System.exit(0);
 		    break;
+		case 10: // enter key
 		case '=':
 		    Notation n;
 		    try {
@@ -95,6 +96,7 @@ class Gui {
 			    break;
 			}
 		    }
+		    System.out.println(e.getKeyCode());
 		    break;
 		}
 		return true;
