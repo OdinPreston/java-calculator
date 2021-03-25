@@ -1,5 +1,6 @@
 class WrongExpressionException extends Exception {
+    public String message;
     WrongExpressionException(String message) {
-	System.out.println(message);
+	this.message = message;
     }
 }
