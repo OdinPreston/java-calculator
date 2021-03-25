@@ -32,8 +32,12 @@ will produce
 20 6 4 + *: Postfix Notation.
 200.0
 ```
+## Images
+![Gui 1](gui1.webp)
+![Gui 2](gui2.webp)
 ## Todo
 1. [x] ~~Add the exponent (^) operator.~~ 
 2. [x] ~~Use BigDecimal instead of double.~~
-3. [ ] Make a simple GUI interface launchable when ran with no arguments.
+3. [x] ~~Make a simple GUI interface launchable when ran with no arguments.~~
 4. [x] ~~Add support for negative numbers.~~
+5. [ ] Make the number displayed in GUI copyable to clipboard by clicking.
