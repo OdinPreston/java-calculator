@@ -56,6 +56,8 @@ SPACE  	  | Insert a blank into expression
 BACKSPACE | Backspace
 ENTER  	  | Evaluate expression
 0-9    	  | Insert a number into expression
+L Arrow	  | Scroll display left
+R Arrow	  | Scroll display right
 #### Images
 ![Gui 1](gui1.webp)
 ![Gui 2](gui2.webp)
