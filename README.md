@@ -32,7 +32,7 @@ will produce
 20 6 4 + *: Postfix Notation.
 200.0
 ```
-There is also GUI, accessible if you run the program without any command line arguments. The images of how it looks like are below.
+There is also GUI, accessible if you run the program without any command line arguments. The images of how it looks like are below. It has the added benefit of being able to copy the output at any given time, by clicking the number display with left mouse button.
 ## Images
 ![Gui 1](gui1.webp)
 ![Gui 2](gui2.webp)
@@ -41,4 +41,5 @@ There is also GUI, accessible if you run the program without any command line ar
 2. [x] ~~Use BigDecimal instead of double.~~
 3. [x] ~~Make a simple GUI interface launchable when ran with no arguments.~~
 4. [x] ~~Add support for negative numbers.~~
-5. [ ] Make the number displayed in GUI copyable to clipboard by clicking.
+5. [x] ~~Make the number displayed in GUI copyable to clipboard by clicking.~~
+6. [ ] Configure GUI to take input from keyboard as well.
