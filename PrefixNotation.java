@@ -52,6 +52,8 @@ class PrefixNotation extends Notation {
 		}
 		valueString = (unary) ? ("-" + valueString) : valueString;
 		BigDecimal value = new BigDecimal(valueString);
+		// round at 100 digits
+		value.setScale(value.scale() - value.precision() - 100, RoundingMode.HALF_EVEN);
 		operands.addFirst(value);
 		if(i != expr.length-1)
 		    --i;
@@ -82,7 +84,9 @@ class PrefixNotation extends Notation {
 		operands.addFirst(operands.removeFirst().multiply(val));
 		break;
 	    case '/':
-		operands.addFirst(operands.removeFirst().divide(val, 100, RoundingMode.HALF_EVEN));
+		if(val.compareTo(new BigDecimal("0")) == 0)
+		    throw new WrongExpressionException("Division by zero");
+		operands.addFirst(operands.removeFirst().divide(val));
 		break;
 	    case '+':
 		operands.addFirst(operands.removeFirst().add(val));
@@ -98,6 +102,6 @@ class PrefixNotation extends Notation {
 	    throw new WrongExpressionException("No operands left after evaluation, expression is invalid.");
 	else if(!operators.isEmpty())
 	    throw new WrongExpressionException("Operators left after evaluation, expression is invalid.");
-	return operands.removeFirst();
+	return operands.removeFirst().stripTrailingZeros();
     }
 }

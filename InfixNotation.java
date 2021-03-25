@@ -29,7 +29,9 @@ class InfixNotation extends Notation {
 	case '*':
 	    return val2.multiply(val1);
 	case '/':
-	    return val2.divide(val1, 100, RoundingMode.HALF_EVEN);
+	    if(val1.compareTo(new BigDecimal("0")) == 0)
+		throw new WrongExpressionException("Division by zero");
+	    return val2.divide(val1);
 	case '+':
 	    return val2.add(val1);
 	case '-':
@@ -110,6 +112,8 @@ class InfixNotation extends Notation {
 		}
 		valueString = (unary) ? ("-" + valueString) : valueString;
 		BigDecimal value = new BigDecimal(valueString);
+		// round at 100 digits
+		value.setScale(value.scale() - value.precision() - 100, RoundingMode.HALF_EVEN);
 		operands.addFirst(value);
 		if(i != expr.length)
 		    --i;
@@ -139,6 +143,6 @@ class InfixNotation extends Notation {
 	    throw new WrongExpressionException("No operands left after evaluation, expression is invalid.");
 	else if(!operators.isEmpty())
 	    throw new WrongExpressionException("Operators left after evaluation, expression is invalid.");
-	return operands.removeFirst();
+	return operands.removeFirst().stripTrailingZeros();
     }
 }
