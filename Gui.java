@@ -64,18 +64,18 @@ class Gui {
 		case 'c':
 		    expression = "";
 		    textField.setText(expression);
-		    break;
+		    return true;
 		case 'X':
 		case 'x':
 		    Toolkit.getDefaultToolkit()
 			.getSystemClipboard()
 			.setContents(new StringSelection(textField.getText()), null);
-		    break;
+		    return true;
 		case 'Q':
 		case 'q':
 		case 27: // esc key
 		    System.exit(0);
-		    break;
+		    return true;
 		case 10: // enter key
 		case '=':
 		    Notation n;
@@ -88,18 +88,17 @@ class Gui {
 			JOptionPane.showMessageDialog(null, exc.message);
 			textField.setText(expression);
 		    }
-		    break;
+		    return true;
 		default:
 		    for(char element : defaults) {
 			if(element == e.getKeyChar()) {
 			    expression += element;
 			    textField.setText(expression);
-			    break;
+			    return true;
 			}
 		    }
-		    break;
 		}
-		return true;
+		return false;
 	    }
 	};
 
