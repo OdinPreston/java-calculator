@@ -70,6 +70,6 @@ R Arrow	  | Scroll display right
 6. [x] ~~Configure GUI to take input from keyboard as well.~~
 ## License
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License version 3 only
+it under the terms of the GNU Affero General Public License version 3 only
 as published by the Free Software Foundation.
 
