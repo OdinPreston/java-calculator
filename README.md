@@ -68,3 +68,8 @@ R Arrow	  | Scroll display right
 4. [x] ~~Add support for negative numbers.~~
 5. [x] ~~Make the number displayed in GUI copyable to clipboard by clicking.~~
 6. [x] ~~Configure GUI to take input from keyboard as well.~~
+## License
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License version 3 only
+as published by the Free Software Foundation.
+
